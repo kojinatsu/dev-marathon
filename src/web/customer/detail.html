@@ -13,8 +13,8 @@
 
         <table class="table table-bordered">
             <tr>
-                <th>ID</th>
-                <td id="id"></td>
+                <th>顧客ID</th>
+                <td id="customer_id"></td>
             </tr>
             <tr>
                 <th>会社名</th>
@@ -32,9 +32,18 @@
                 <th>所在地</th>
                 <td id="location"></td>
             </tr>
+            <tr>
+                <th>作成日時</th>
+                <td id="created_date"></td>
+            </tr>
+            <tr>
+                <th>更新日時</th>
+                <td id="updated_date"></td>
+            </tr>
         </table>
 
         <a href="./list.html" class="btn btn-secondary">一覧へ戻る</a>
+        <button id="delete-button" class="btn btn-danger">削除</button>
     </div>
 
     <script type="module">
@@ -56,17 +65,42 @@
                 return response.json();
             })
             .then((customer) => {
-                document.getElementById("id").textContent = customer.id;
+                document.getElementById("customer_id").textContent = customer.customer_id;
                 document.getElementById("company_name").textContent = customer.company_name;
                 document.getElementById("industry").textContent = customer.industry;
                 document.getElementById("contact").textContent = customer.contact;
                 document.getElementById("location").textContent = customer.location;
+                document.getElementById("created_date").textContent = customer.created_date;
+                document.getElementById("updated_date").textContent = customer.updated_date;
             })
             .catch((error) => {
                 console.error(error);
                 alert("顧客情報の取得に失敗しました。");
                 location.href = "./list.html";
             });
+
+        document.getElementById("delete-button").addEventListener("click", function() {
+            if (!confirm("削除していいですか?")) {
+                return;
+            }
+
+            fetch(`${config.apiUrl}/customers/${id}`, {
+                method: "DELETE"
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert("削除しました。");
+                    location.href = "./list.html";
+                } else {
+                    alert("削除に失敗しました。");
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("エラーが発生しました。");
+            });
+        });
     </script>
 
     <!-- BootstrapのJavaScriptの読み込み -->

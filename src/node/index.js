@@ -34,7 +34,7 @@ app.get("/customers/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const customerData = await pool.query(
-      "SELECT * FROM customers WHERE id = $1",
+      "SELECT * FROM customers WHERE customer_id = $1",
       [id]
     );
 
@@ -63,6 +63,26 @@ app.post("/add-customer", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.json({ success: false });
+  }
+});
+
+app.delete("/customers/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedCustomer = await pool.query(
+      "DELETE FROM customers WHERE customer_id = $1 RETURNING *",
+      [id]
+    );
+
+    if (deletedCustomer.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Customer not found" });
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
   }
 });
 
