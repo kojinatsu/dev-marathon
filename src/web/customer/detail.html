@@ -43,6 +43,7 @@
         </table>
 
         <a href="./list.html" class="btn btn-secondary">一覧へ戻る</a>
+        <a id="edit-button" class="btn btn-primary">編集</a>
         <button id="delete-button" class="btn btn-danger">削除</button>
     </div>
 
@@ -56,6 +57,8 @@
             alert("顧客IDが指定されていません。");
             location.href = "./list.html";
         }
+
+        document.getElementById("edit-button").href = `./update.html?id=${id}`;
 
         fetch(`${config.apiUrl}/customers/${id}`)
             .then((response) => {
